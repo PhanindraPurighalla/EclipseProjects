@@ -16,6 +16,7 @@ package com.amazonaws.sns.samples.mobilepush;
  */
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.amazonaws.AmazonClientException;
@@ -265,11 +266,23 @@ public class SNSMobilePush {
 				"-----END RSA PRIVATE KEY-----"; // This should be in pem format with \n at the
 								// end of each line.
 		String applicationName = "SegueSudokuDevPushNotification";
-		String deviceToken = "7D8867CA1E8CAE598848381088B8C1F10200A2BC17946464808CAF19B136FF39"; // This is 64 hex characters.
-		snsClientWrapper.demoNotification(Platform.APNS_SANDBOX, certificate,
-				privateKey, deviceToken, applicationName, attributesMap);
+		
+		DDBEventProcessor ddbEventProcessor = new DDBEventProcessor();
+		
+		List<DeviceToken> deviceTokenObjects = ddbEventProcessor.fetchAllDeviceTokens();
+		
+		for (DeviceToken deviceTokenObject : deviceTokenObjects) {
+			//String deviceToken = "7D8867CA1E8CAE598848381088B8C1F10200A2BC17946464808CAF19B136FF39"; // This is 64 hex characters.
+			String deviceToken = deviceTokenObject.getDeviceToken();
+			snsClientWrapper.demoNotification(Platform.APNS_SANDBOX, certificate,
+					privateKey, deviceToken, applicationName, attributesMap);
+			
+		}
+		
+		//String deviceToken = "7D8867CA1E8CAE598848381088B8C1F10200A2BC17946464808CAF19B136FF39"; // This is 64 hex characters.
+		//snsClientWrapper.demoNotification(Platform.APNS_SANDBOX, certificate,privateKey, deviceToken, applicationName, attributesMap);
 	}
-
+	
 	public void demoBaiduAppNotification() {
 		/*
 		 * TODO: Please fill in the following values for your application. If
