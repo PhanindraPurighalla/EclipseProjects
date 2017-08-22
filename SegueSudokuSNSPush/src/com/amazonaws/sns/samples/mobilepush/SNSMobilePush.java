@@ -66,8 +66,8 @@ public class SNSMobilePush {
 			/* TODO: Uncomment the services you wish to use. */
 			// sample.demoAndroidAppNotification();
 			// sample.demoKindleAppNotification();
-			// sample.demoAppleAppNotification();
-			sample.demoAppleSandboxAppNotification();
+			sample.demoAppleAppNotification();
+			// sample.demoAppleSandboxAppNotification();
 			// sample.demoBaiduAppNotification();
 			// sample.demoWNSAppNotification();
 			// sample.demoMPNSAppNotification();
@@ -185,12 +185,25 @@ public class SNSMobilePush {
 				"nHYpZQKBgEYW2/Omit+WQEbG4eINvmZ7/YzISfb5Z1L+BUTsg/1WXIEVDK2dCZLU\r\n" + 
 				"UP2N8vTyLmS4ugYVOPuz5BZa5AcFZvZjTCh9XTqZArBPtbQVEF1aLjyrSbZZ7S6j\r\n" + 
 				"E68MbkHTPLU5u6hKrCx9IRXvcwKtLT6SWebbSRm+t2gxIjN41Vej\r\n" + 
-				"-----END RSA PRIVATE KEY-----"; // This should be in pem format with \n at the
+				"-----END RSA PRIVATE KEY-----\r\n" + 
+				""; // This should be in pem format with \n at the
 								// end of each line.
 		String applicationName = "SegueSudokuPushNotification";
-		String deviceToken = "55575CBF272E9A309724EA815400CDE0426FD90ECCCD6B0C1C34DDD9BCFCE975"; // This is 64 hex characters.
-		snsClientWrapper.demoNotification(Platform.APNS, certificate,
-				privateKey, deviceToken, applicationName, attributesMap);
+		
+		DDBEventProcessor ddbEventProcessor = new DDBEventProcessor();
+		
+		List<DeviceToken> deviceTokenObjects = ddbEventProcessor.fetchAllDeviceTokens();
+		
+		for (DeviceToken deviceTokenObject : deviceTokenObjects) {
+			//String deviceToken = "7D8867CA1E8CAE598848381088B8C1F10200A2BC17946464808CAF19B136FF39"; // This is 64 hex characters.
+			String deviceToken = deviceTokenObject.getDeviceToken();
+			snsClientWrapper.demoNotification(Platform.APNS, certificate,
+					privateKey, deviceToken, applicationName, attributesMap);
+			
+		}
+		
+		//String deviceToken = "55575CBF272E9A309724EA815400CDE0426FD90ECCCD6B0C1C34DDD9BCFCE975"; // This is 64 hex characters.
+		//snsClientWrapper.demoNotification(Platform.APNS, certificate, privateKey, deviceToken, applicationName, attributesMap);
 	}
 
 	public void demoAppleSandboxAppNotification() {
