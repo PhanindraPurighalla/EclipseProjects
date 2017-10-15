@@ -43,6 +43,9 @@ public class Customer implements Serializable {
 
     @Column(name = "date_of_birth")
     private String dateOfBirth;
+    
+    @Column(name = "pin_code")
+    private String pinCode;
 
     @Column(name = "created")
     @CreationTimestamp
@@ -134,6 +137,20 @@ public class Customer implements Serializable {
 	 */
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	/**
+	 * @return the pinCode
+	 */
+	public String getPinCode() {
+		return pinCode;
+	}
+
+	/**
+	 * @param pinCode the pinCode to set
+	 */
+	public void setPinCode(String pinCode) {
+		this.pinCode = pinCode;
 	}
 
 	/**

@@ -10,6 +10,7 @@ public class CustomerVO {
 	private String emailId;
 	private String contactNo;
 	private String dateOfBirth;
+	private String pinCode;
 
 	/**
 	 * @return the customerId
@@ -84,6 +85,20 @@ public class CustomerVO {
 	 */
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	/**
+	 * @return the pinCode
+	 */
+	public String getPinCode() {
+		return pinCode;
+	}
+
+	/**
+	 * @param pinCode the pinCode to set
+	 */
+	public void setPinCode(String pinCode) {
+		this.pinCode = pinCode;
 	}
 
 }

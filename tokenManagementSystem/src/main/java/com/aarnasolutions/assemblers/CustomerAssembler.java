@@ -1,55 +1,17 @@
 package com.aarnasolutions.assemblers;
 
+import org.springframework.stereotype.Component;
+
 import com.aarnasolutions.domain.Customer;
 import com.aarnasolutions.util.CustomerUtil;
 import com.aarnasolutions.vo.CreateCustomerVO;
-import com.aarnasolutions.vo.UpdateCustomerVO;
 import com.aarnasolutions.vo.CustomerVO;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.aarnasolutions.vo.UpdateCustomerVO;
 
 @Component
 public class CustomerAssembler {
 	
-	@Autowired
-	private Customer customer;
 	
-	@Autowired
-	private CustomerVO customerVO;
-    
-    /**
-	 * @return the customer
-	 */
-	public Customer getCustomer() {
-		return customer;
-	}
-
-
-	/**
-	 * @param customer the customer to set
-	 */
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-
-	/**
-	 * @return the customerVO
-	 */
-	public CustomerVO getCustomerVO() {
-		return customerVO;
-	}
-
-
-	/**
-	 * @param customerVO the customerVO to set
-	 */
-	public void setCustomerVO(CustomerVO customerVO) {
-		this.customerVO = customerVO;
-	}
-
-
 	/**
      * CreateCustomerVO to Customer.
      *
@@ -57,11 +19,14 @@ public class CustomerAssembler {
      * @return
      */
     public Customer toCustomer(CreateCustomerVO createCustomerVO) {
+    		
+    		Customer customer = new Customer();
         customer.setFirstName(createCustomerVO.getFirstName());
         customer.setLastName(createCustomerVO.getLastName());
         customer.setEmailId(createCustomerVO.getEmailId());
         customer.setContactNo(createCustomerVO.getContactNo());
         customer.setDateOfBirth(createCustomerVO.getDateOfBirth());
+        customer.setPinCode(createCustomerVO.getPinCode());
         return customer;
     }
 
@@ -73,6 +38,12 @@ public class CustomerAssembler {
      * @return
      */
     public CustomerVO toCustomerVO(Customer customer) {
+    	
+    		if (customer == null) {
+    			return null;
+    		}
+    		
+    		CustomerVO customerVO = new CustomerVO();
         customerVO.setCustomerId(customer.getId());
         customerVO.setFullName(CustomerUtil.convertToFullName(customer.getFirstName(), customer.getLastName()));
         customerVO.setEmailId(customer.getEmailId());
@@ -88,6 +59,8 @@ public class CustomerAssembler {
      * @return
      */
     public Customer toCustomer(UpdateCustomerVO updateCustomerVO) {
+    	
+    		Customer customer = new Customer();
         customer.setId(updateCustomerVO.getCustomerId());
         customer.setFirstName(updateCustomerVO.getFirstName());
         customer.setLastName(updateCustomerVO.getLastName());
