@@ -3,12 +3,15 @@ package deliveryVanTracker;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.aarnasolutions.app.Application;
 import com.aarnasolutions.controller.UserController;
+import com.aarnasolutions.controller.UserTypeController;
 import com.aarnasolutions.vo.CreateUserTypeVO;
 import com.aarnasolutions.vo.CreateUserVO;
 import com.aarnasolutions.vo.UserVO;
@@ -24,6 +27,9 @@ public class UserSteps {
 	@Autowired
 	UserController userController;
 	
+	@Autowired
+	UserTypeController userTypeController;
+	
 	/**
 	 * @return the userController
 	 */
@@ -38,16 +44,36 @@ public class UserSteps {
 		this.userController = userController;
 	}
 
+	/**
+	 * @return the userTypeController
+	 */
+	public UserTypeController getUserTypeController() {
+		return userTypeController;
+	}
+
+	/**
+	 * @param userTypeController the userTypeController to set
+	 */
+	public void setUserTypeController(UserTypeController userTypeController) {
+		this.userTypeController = userTypeController;
+	}
+
 	UserVO userFromDatabase;
 	
-	@Given("^that usertypes adminUserType (.*) and driverUsertype (.*) exist$")
-	public void userTypesExist(String adminUserType, String driverUserType) throws Throwable {
+	@Given("^that usertypes adminUserType and driverUserType exist$")
+	public void userTypesExist(Map<String, String> tableData) throws Throwable {
 		
 		CreateUserTypeVO createAdminUserTypeVO = new CreateUserTypeVO();
-		createAdminUserTypeVO.setUserTypeCode("A");
+		createAdminUserTypeVO.setUserTypeCode(tableData.get("admin_user_type"));
 		createAdminUserTypeVO.setUserTypeDesc("Admin User");
 		
-		userController.createUser(createUserVO);
+		userTypeController.createUserType(createAdminUserTypeVO);
+		
+		CreateUserTypeVO createDriverUserTypeVO = new CreateUserTypeVO();
+		createDriverUserTypeVO.setUserTypeCode(tableData.get("driver_user_type"));
+		createDriverUserTypeVO.setUserTypeDesc("Driver");
+		
+		userTypeController.createUserType(createDriverUserTypeVO);
 		
 	}
 	

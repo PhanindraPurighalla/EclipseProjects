@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aarnasolutions.assemblers.UserAssembler;
@@ -38,7 +39,22 @@ public class UserController {
 	@Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    /**
+	 * @return the userService
+	 */
+	public UserService getUserService() {
+		return userService;
+	}
+
+	/**
+	 * @param userService the userService to set
+	 */
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
     public UserVO getUser(@PathVariable("id") Long id) {
         return userAssembler.toUserVO(userService.getUserById(id));
     }

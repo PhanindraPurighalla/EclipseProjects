@@ -1,0 +1,4 @@
+CMF, account_no
+CMF, prev_bill_refno
+CMF, prev_bill_ref_resets
+BILL_INVOICE, bill_sequence_num

@@ -1,0 +1,6 @@
+CMF, account_no
+CMF, prev_bill_refno
+CMF, prev_bill_ref_resets
+KEYFIELDS|CMF:account_no IN (SELECT account_no FROM extn_bill_extract)
+BILL_INVOICE, bill_sequence_num
+KEYFIELDS|BILL_INVOICE:bill_ref_no = 32001 AND bill_ref_resets = 3
