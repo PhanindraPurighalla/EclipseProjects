@@ -1,6 +1,8 @@
 package com.aarnasolutions.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +21,10 @@ import com.aarnasolutions.vo.UpdateUserVO;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserAssembler userAssembler;
+	@Autowired
+	private UserAssembler userAssembler;
 
-    /**
+	/**
 	 * @return the userAssembler
 	 */
 	public UserAssembler getUserAssembler() {
@@ -30,16 +32,17 @@ public class UserController {
 	}
 
 	/**
-	 * @param userAssembler the userAssembler to set
+	 * @param userAssembler
+	 *            the userAssembler to set
 	 */
 	public void setUserAssembler(UserAssembler userAssembler) {
 		this.userAssembler = userAssembler;
 	}
 
 	@Autowired
-    private UserService userService;
+	private UserService userService;
 
-    /**
+	/**
 	 * @return the userService
 	 */
 	public UserService getUserService() {
@@ -47,45 +50,51 @@ public class UserController {
 	}
 
 	/**
-	 * @param userService the userService to set
+	 * @param userService
+	 *            the userService to set
 	 */
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public UserVO getUser(@PathVariable("id") Long id) {
-        return userAssembler.toUserVO(userService.getUserById(id));
-    }
-    
-    @RequestMapping(value = "/mobileNo/{mobileNo}", method = RequestMethod.GET)
-    public UserVO getUser(@PathVariable("mobileNo") String mobileNo) {
-        return userAssembler.toUserVO(userService.getUserByMobileNo(mobileNo));
-    }
-    
-    @RequestMapping(method = RequestMethod.POST)
-    public UserVO createUser(@RequestBody CreateUserVO userVO) {
-        //convert to User
-        User user = userAssembler.toUser(userVO);
-        //save User
-        User savedUser = userService.createUser(user);
-        //convert to UserVO
-        return userAssembler.toUserVO(savedUser);
-    }
+	@ResponseBody
+	public UserVO getUser(@PathVariable("id") Long id) {
+		return userAssembler.toUserVO(userService.getUserById(id));
+	}
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public UserVO updateUser(@RequestBody UpdateUserVO updateUserVO) {
-        //convert to User
-        User user = userAssembler.toUser(updateUserVO);
-        //update User
-        userService.updateUser(user);
-        //convert to UserVO
-        return userAssembler.toUserVO(user);
-    }
+	@RequestMapping(value = "/mobileNo/{mobileNo}", method = RequestMethod.GET)
+	public UserVO getUser(@PathVariable("mobileNo") String mobileNo) {
+		return userAssembler.toUserVO(userService.getUserByMobileNo(mobileNo));
+	}
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-    }
+	@RequestMapping(method = RequestMethod.POST)
+	public UserVO createUser(@RequestBody CreateUserVO userVO) {
+		// convert to User
+		User user = userAssembler.toUser(userVO);
+		// save User
+		User savedUser = userService.createUser(user);
+		// convert to UserVO
+		return userAssembler.toUserVO(savedUser);
+	}
+
+	@RequestMapping(value = "/{mobileNo}", method = RequestMethod.PUT)
+	public ResponseEntity<UserVO> updateUser(@PathVariable("mobileNo") String mobileNo,
+			@RequestBody UpdateUserVO updateUserVO) {
+
+		User currentUser = userService.getUserByMobileNo(mobileNo);
+		if (currentUser == null) {
+			System.out.println("User with mobileNo " + mobileNo + " not found");
+			return new ResponseEntity<UserVO>(HttpStatus.NOT_FOUND);
+		}
+		
+		currentUser.setLastLocationCity(updateUserVO.getLastLocationCity());
+		userService.updateUser(currentUser);
+		return new ResponseEntity<UserVO>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public void delete(@PathVariable("id") Long id) {
+		userService.deleteUser(id);
+	}
 }
