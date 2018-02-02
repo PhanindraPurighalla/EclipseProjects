@@ -38,7 +38,7 @@ public class UserTypeController {
 	@Autowired
     private UserTypeService userTypeService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = {"application/xml", "application/json"}, produces = {"application/xml", "application/json"})
     public @ResponseBody UserTypeVO getUserType(@PathVariable("id") Long id) {
         return userTypeAssembler.toUserTypeVO(userTypeService.getUserTypeById(id));
     }
@@ -48,7 +48,7 @@ public class UserTypeController {
         return userTypeAssembler.toUserTypeVO(userTypeService.getUserTypeByUserTypeCode(userTypeCode));
     }
     
-    @RequestMapping(value = "/userTypeCode/{userTypeDesc}", method = RequestMethod.GET)
+    @RequestMapping(value = "/userTypeDesc/{userTypeDesc}", method = RequestMethod.GET)
     public @ResponseBody UserTypeVO getUserTypeByUserTypeDesc(@PathVariable("userTypeDesc") String userTypeDesc) {
         return userTypeAssembler.toUserTypeVO(userTypeService.getUserTypeByUserTypeDesc(userTypeDesc));
     }

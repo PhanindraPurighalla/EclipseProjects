@@ -1,14 +1,29 @@
 package com.aarnasolutions.vo;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.springframework.stereotype.Component;
 
 @Component
+@XmlRootElement(name = "response")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class UserVO {
 
+	@XmlElement
 	private Long userId;
+	
+	@XmlElement
 	private String userName;
+	
+	@XmlElement
 	private String mobileNo;
+	
+	@XmlElement
 	private String userTypeId;
+	
 	private String lastLocationLat;
 	private String lastLocationLong;
 	private String lastLocationLocality;

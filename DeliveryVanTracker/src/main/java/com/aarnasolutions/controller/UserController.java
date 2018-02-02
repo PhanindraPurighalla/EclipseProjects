@@ -68,8 +68,8 @@ public class UserController {
 		return userAssembler.toUserVO(userService.getUserByMobileNo(mobileNo));
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public UserVO createUser(@RequestBody CreateUserVO userVO) {
+	@RequestMapping(method = RequestMethod.POST, consumes = {"application/xml", "application/json"}, produces = {"application/xml", "application/json"})
+	public @ResponseBody UserVO createUser(@RequestBody CreateUserVO userVO) {
 		// convert to User
 		User user = userAssembler.toUser(userVO);
 		// save User
@@ -78,7 +78,7 @@ public class UserController {
 		return userAssembler.toUserVO(savedUser);
 	}
 
-	@RequestMapping(value = "/{mobileNo}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{mobileNo}", method = RequestMethod.PUT, consumes = {"application/xml", "application/json"}, produces = {"application/xml", "application/json"})
 	public ResponseEntity<UserVO> updateUser(@PathVariable("mobileNo") String mobileNo,
 			@RequestBody UpdateUserVO updateUserVO) {
 

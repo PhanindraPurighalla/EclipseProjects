@@ -1,12 +1,24 @@
 package com.aarnasolutions.vo;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.springframework.stereotype.Component;
 
 @Component
+@XmlRootElement(name = "response")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class UserTypeVO {
 
+	@XmlElement
 	private Long userTypeId;
+	
+	@XmlElement
 	private String userTypeCode;
+	
+	@XmlElement
 	private String userTypeDesc;
 	/**
 	 * @return the userTypeId
