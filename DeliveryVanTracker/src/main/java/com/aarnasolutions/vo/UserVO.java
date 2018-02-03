@@ -24,12 +24,24 @@ public class UserVO {
 	@XmlElement
 	private String userTypeId;
 	
+	@XmlElement
 	private String lastLocationLat;
+	
+	@XmlElement
 	private String lastLocationLong;
+	
+	@XmlElement
 	private String lastLocationLocality;
+	
+	@XmlElement
 	private String lastLocationCity;
+	
+	@XmlElement
 	private String lastLocationCountry;
+	
+	@XmlElement
 	private String lastLocationTime;
+	
 	/**
 	 * @return the userId
 	 */

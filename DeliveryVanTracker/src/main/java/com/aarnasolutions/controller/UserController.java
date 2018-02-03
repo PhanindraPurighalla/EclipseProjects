@@ -63,7 +63,7 @@ public class UserController {
 		return userAssembler.toUserVO(userService.getUserById(id));
 	}
 
-	@RequestMapping(value = "/mobileNo/{mobileNo}", method = RequestMethod.GET)
+	@RequestMapping(value = "/mobileNo/{mobileNo}", method = RequestMethod.GET, consumes = {"application/xml", "application/json"}, produces = {"application/xml", "application/json"})
 	public UserVO getUser(@PathVariable("mobileNo") String mobileNo) {
 		return userAssembler.toUserVO(userService.getUserByMobileNo(mobileNo));
 	}
@@ -75,7 +75,7 @@ public class UserController {
 		// save User
 		User savedUser = userService.createUser(user);
 		// convert to UserVO
-		return userAssembler.toUserVO(savedUser);
+		return userAssembler.toUserVO(userService.getUserById(savedUser.getId()));
 	}
 
 	@RequestMapping(value = "/{mobileNo}", method = RequestMethod.PUT, consumes = {"application/xml", "application/json"}, produces = {"application/xml", "application/json"})
@@ -89,6 +89,9 @@ public class UserController {
 		}
 		
 		currentUser.setLastLocationCity(updateUserVO.getLastLocationCity());
+		currentUser.setLastLocationLocality(updateUserVO.getLastLocationLocality());
+		currentUser.setLastLocationCountry(updateUserVO.getLastLocationCountry());
+		currentUser.setMobileNo(updateUserVO.getMobileNo());
 		userService.updateUser(currentUser);
 		return new ResponseEntity<UserVO>(HttpStatus.OK);
 	}

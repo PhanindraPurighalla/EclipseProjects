@@ -17,6 +17,7 @@ public class CreateUserVO {
 	
 	@XmlElement
 	private String userTypeId;
+	
 	/**
 	 * @return the userName
 	 */

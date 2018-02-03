@@ -1,17 +1,44 @@
 package com.aarnasolutions.vo;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "request")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class UpdateUserVO {
 
+	@XmlElement
 	private Long userId;
+	
+	@XmlElement
 	private String userName;
+	
+	@XmlElement
 	private String userTypeId;
+	
+	@XmlElement
 	private String mobileNo;
+	
+	@XmlElement
 	private String lastLocationLat;
+	
+	@XmlElement
 	private String lastLocationLong;
+	
+	@XmlElement
 	private String lastLocationLocality;
+	
+	@XmlElement
 	private String lastLocationCity;
+	
+	@XmlElement
 	private String lastLocationCountry;
+	
+	@XmlElement
 	private String lastLocationTime;
+	
 	/**
 	 * @return the userId
 	 */
