@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CreateUserVO>
+	<userName>PRM1</userName>
+	<userTypeId>PRM2</userTypeId>
+	<mobileNo>PRM3</mobileNo>
+</CreateUserVO>
