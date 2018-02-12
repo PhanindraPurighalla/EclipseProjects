@@ -1,8 +1,7 @@
 package deliveryVanTracker;
 
-import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -23,9 +23,10 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import io.restassured.http.ContentType;
+import io.restassured.RestAssured;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import junit.framework.Assert;
 
 @SuppressWarnings("deprecation")
@@ -40,11 +41,11 @@ public class ParameterizedInputSteps {
 
 	Map<String, String> parameterNameNodeElementMapping = new HashMap<String, String>();
 	Map<String, List<String>> parameterNameTestValueMapping = new HashMap<String, List<String>>();
-	
+
 	int numberOfTests = 0;
-	
+
 	String fileAsString = null;
-	
+
 	Map<Integer, Response> testResponses = new HashMap<Integer, Response>();
 
 	@Given("^parameterized input XML exists$")
@@ -86,13 +87,16 @@ public class ParameterizedInputSteps {
 			parameterNameTestValueMapping.put(fields[0], testParameterList);
 		}
 		reader.close();
-		
-		for(String parameter: parameterNameTestValueMapping.keySet()) {
+
+		for (String parameter : parameterNameTestValueMapping.keySet()) {
 			int currNumberOfTests = parameterNameTestValueMapping.get(parameter).size();
 			if (numberOfTests == 0) {
 				numberOfTests = currNumberOfTests;
 			}
-			Assert.assertTrue("All parameters not bound in CSV file. Parameter " + parameter + " has " + currNumberOfTests + " test values when " + numberOfTests + " values were expected!", (numberOfTests == 0 || currNumberOfTests == numberOfTests));
+			Assert.assertTrue(
+					"All parameters not bound in CSV file. Parameter " + parameter + " has " + currNumberOfTests
+							+ " test values when " + numberOfTests + " values were expected!",
+					(numberOfTests == 0 || currNumberOfTests == numberOfTests));
 		}
 	}
 
@@ -108,30 +112,45 @@ public class ParameterizedInputSteps {
 
 		fileAsString = new String(bytesArray);
 		fileAsString = fileAsString.replaceAll("[^\\x20-\\x7e\\x0A]", "");
-		
-		for (int testNumber=0; testNumber < numberOfTests; testNumber++) {
-			String xmlInputToService = fileAsString;
+
+		for (int testNumber = 0; testNumber < numberOfTests; testNumber++) {
 			Response response = null;
-			for (String parameter: parameterNameTestValueMapping.keySet()) {
-				xmlInputToService = xmlInputToService.replaceAll(parameter, parameterNameTestValueMapping.get(parameter).get(testNumber));
+			RestAssured.baseURI ="http://localhost:8080";
+			RequestSpecification request = RestAssured.given();
+			
+			// Add a header stating the Request body is a JSON
+			request.header("Content-Type", "application/json");
+			
+			JSONObject requestParams = new JSONObject();
+			for (String parameter : parameterNameTestValueMapping.keySet()) {
+				requestParams.put(parameterNameNodeElementMapping.get(parameter),
+						parameterNameTestValueMapping.get(parameter).get(testNumber));
+
 			}
-			Reporter.addStepLog("CreateUser API invoked with the below body: " + xmlInputToService);
-			response = given().contentType(ContentType.XML).and().body(xmlInputToService).and().when().post("/user");
-			testResponses.put(testNumber, response);
-		}		
-	
+			
+			// Add the Json to the body of the request
+			request.body(requestParams.toString());
+			
+			Reporter.addStepLog("CreateUser API invoked with the below body: " + requestParams.toString());
+			response = request.post("/user");
+			testResponses.put(testNumber, response);			
+
+		}
+
 	}
 
 	@Then("^response XML is generated$")
 	public void responseXMLIsGenerated() throws Throwable {
 
-		for (Integer testNumber: testResponses.keySet()) {
-			Reporter.addStepLog("Response from CreateUser API being verified: " + testResponses.get(testNumber).getBody().asString());
-			assertThat("API call has not been successful for test number: " + testNumber, testResponses.get(testNumber).getStatusCode(), equalTo(200));
+		for (Integer testNumber : testResponses.keySet()) {
+			Reporter.addStepLog("Response from CreateUser API being verified: "
+					+ testResponses.get(testNumber).getBody().asString());
+			assertThat("API call has not been successful for test number: " + testNumber,
+					testResponses.get(testNumber).getStatusCode(), equalTo(200));
 			XmlPath xmlPath = testResponses.get(testNumber).getBody().xmlPath();
 			assertThat("UserType should be 21", xmlPath.getInt("CreateUserVO.userTypeId"), equalTo(21));
 		}
-		
+
 	}
 
 }

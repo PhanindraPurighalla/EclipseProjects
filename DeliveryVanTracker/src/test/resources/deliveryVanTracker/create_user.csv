@@ -1,3 +1,3 @@
-PRM1:CreateUserVO.userName:UserName1,UserName2,UserName3
-PRM2:CreateUserVO.userTypeId:21,21,21
-PRM3:CreateUserVO.mobileNo:1111111111,2222222222,3333333333
+PRM1:userName:UserName14,UserName15,UserName16
+PRM2:userTypeId:21,21,21
+PRM3:mobileNo:14141414,15151515,16161616
